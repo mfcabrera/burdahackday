@@ -1,32 +1,22 @@
 #!flask/bin/python
 
-from flask import Flask, request, make_response, send_file
+from flask import Flask, send_file
 from flask_restful import Resource, Api
 from flask_restful import reqparse
 import werkzeug
 import requests
 from requests.auth import HTTPBasicAuth
 import time
+import config
 
 app = Flask(__name__)
 api = Api(app)
 
-
+# OUR Database :P
 documents =  {}
 
-GINI_CLIENT_ID='burda-hackday-01'
-GINI_CLIENT_SECRET='q_NoORwCvgZAqgNQiqlAVSV7QCw'
-LOCAL_PATH = "/Users/miguel/TMPDOCS/{}"
 
 class Document(Resource):
-
-	GINI_URL = "https://api.gini.net/documents"
-	GINI_USER, GINI_PASSWD = 'burda-hackday-01:q_NoORwCvgZAqgNQiqlAVSV7QCw'.split(':')
-
-	GINI_HEADERS = {'X-User-Identifier': 'mfcabrera', 'Accept': 'application/vnd.gini.v1+json'}
-
-	 #	curl -v -X POST --data-binary '@/Users/miguel/Downloads/test_document/invoce.pd#f' -H 'Accept: application/vnd.gini.v1+json'  'https://api.gini.net/documents' -u #'burda-hackday-01:q_NoORwCvgZAqgNQiqlAVSV7QCw' -H 'X-User-Identifier: mfcabrera'
-
 
 
 	def post(self, document_id):
@@ -38,7 +28,7 @@ class Document(Resource):
 
 		args = parser.parse_args()
 		print(args)
-		self.local_path = LOCAL_PATH.format(document_id)
+		self.local_path = config.LOCAL_PATH.format(document_id)
 		stream = args['fileupload'].stream
 		args['fileupload'].save(self.local_path)
 
@@ -46,8 +36,8 @@ class Document(Resource):
 
 		r  = requests.post(self.GINI_URL,
 						   files={'file': (document_id, open(self.local_path), 'application/octect-stream')},
-		 				   auth=HTTPBasicAuth(self.GINI_USER, self.GINI_PASSWD),
-						   headers = self.GINI_HEADERS
+		 				   auth=HTTPBasicAuth(config.GINI_USER, config.GINI_PASSWD),
+						   headers = config.GINI_HEADERS
 		)
 
 		self.name = document_id
@@ -63,8 +53,8 @@ class Document(Resource):
 		time.sleep(3)
 
 		p = requests.get(ext_url,
-						 auth=HTTPBasicAuth(self.GINI_USER, self.GINI_PASSWD),
-						 headers = self.GINI_HEADERS)
+						 auth=HTTPBasicAuth(config.GINI_USER, config.GINI_PASSWD),
+						 headers = config.GINI_HEADERS)
 		print(p.status_code)
 		self.extractions = p.json()
 
@@ -114,9 +104,8 @@ class Document(Resource):
 		values = sorted(map(lambda x: float(x["value"].split(":")[0]), l))
 		return values[2]
 
-
 	def get(self, document_id):
-		f = LOCAL_PATH.format(document_id)
+		f = config.LOCAL_PATH.format(document_id)
 		response = send_file(f, mimetype='application/octet-stream')
 		return response
 
