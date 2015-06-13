@@ -234,6 +234,7 @@
 			}
 			function httpGet(theUrl)
 			{
+				sleep(6000);
 			    var xmlHttp = new XMLHttpRequest();
 			    
 			    xmlHttp.open( "GET", theUrl, false );
@@ -242,7 +243,14 @@
 			    console.log(xmlHttp.responseText)
 			    return xmlHttp.responseText;
 			}
-
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
 		</script>
 
 	</body>
