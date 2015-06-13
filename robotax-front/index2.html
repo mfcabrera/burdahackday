@@ -217,16 +217,30 @@
 					  formData.append("fileupload", fileInput[0]);			  
 					  fileInput[0].name;
 					  var request = new XMLHttpRequest();
-					  request.open("POST", "http://robo.tax:8080/" + fileInput[0].name);
+					  var theFile = "http://robo.tax:8080/" + fileInput[0].name;
+					  request.open("POST", theFile);
 					  request.send(formData);
+					  setTimeout(httpGet(theFile), 2000);
 
-					  swal({   title: "Good job!",   text: "Your image is being processed. You will get the result soon.",   type: "success", confirmButtonText: "Cool", html:true });
+					  sweetAlert("Oops...", "It looks like your purchase is not tax deductible :(", "error");
+
+					  swal({   title: "It's tax deductible!",   text: "Your expected return is 20 bucks. Wanna add this record?",   type: "success",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Looks good!",   cancelButtonText: "Not good!",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {     swal("Added!", "The record has been added.", "success");   } else {     swal("Cancelled", "The record has been discarded, you like throwing money away do you?", "error");   } });
 					  
 					};
 					//load photo into canvas
 					photo.src = picURL;
 					// windowURL.revokeObjectURL(picURL);
 				}
+			}
+			function httpGet(theUrl)
+			{
+			    var xmlHttp = new XMLHttpRequest();
+			    
+			    xmlHttp.open( "GET", theUrl, false );
+			    xmlHttp.setRequestHeader("Accept", "application/json");
+			    xmlHttp.send( null );
+			    console.log(xmlHttp.responseText)
+			    return xmlHttp.responseText;
 			}
 
 		</script>
