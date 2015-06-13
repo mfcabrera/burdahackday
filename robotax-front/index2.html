@@ -217,7 +217,7 @@
 					  formData.append("fileupload", fileInput[0]);			  
 					  fileInput[0].name;
 					  var request = new XMLHttpRequest();
-					  request.open("POST", "http://46.101.180.138:8080/" + fileInput[0].name);
+					  request.open("POST", "http://robo.tax:8080/" + fileInput[0].name);
 					  request.send(formData);
 
 					  swal({   title: "Good job!",   text: "Your image is being processed. You will get the result soon.",   type: "success", confirmButtonText: "Cool", html:true });
