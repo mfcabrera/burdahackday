@@ -63,7 +63,7 @@ class Document(Resource):
 
 		response =  {'document_id': self.document_id,
 					 'gini_loc': self.gini_loc,
-					 'original_file': 'http://api.robo.tax/{}'.format(self.name)
+					 'original_file': 'http://api.robo.tax:8080/{}'.format(self.name)
 		}
 
 		response.update(self.data)
@@ -114,4 +114,4 @@ api.add_resource(Document, '/<path:document_id>')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8080)
