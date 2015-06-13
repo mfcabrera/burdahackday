@@ -122,7 +122,7 @@
 
 						<div class="fileUpload fa fa-camera">
 							<span>Add New Receipt</span>
-							<form id="badass" action="http://46.101.180.138:8080/" method="post">
+							<form id="badass" action="http://robo.tax:8080/docs/" method="post">
 								<input id="thepic" type="file" class="upload" accept="image/*" capture="camera" onchange="picChange(event)" value="">
 							</form>
 						</div>
@@ -217,7 +217,7 @@
 					  formData.append("fileupload", fileInput[0]);			  
 					  fileInput[0].name;
 					  var request = new XMLHttpRequest();
-					  var theFile = "http://robo.tax:8080/" + fileInput[0].name;
+					  var theFile = "http://robo.tax:8080/docs/" + fileInput[0].name;
 					  request.open("POST", theFile);
 					  request.send(formData);
 					  setTimeout(httpGet(theFile), 2000);

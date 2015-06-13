@@ -1,6 +1,6 @@
 #!flask/bin/python
 
-from flask import Flask, send_file
+from flask import Flask, send_file, make_response, request, send_from_directory
 from flask_restful import Resource, Api
 from flask_restful import reqparse
 import werkzeug
@@ -8,6 +8,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 import time
 import config
+import json
 
 app = Flask(__name__)
 api = Api(app)
@@ -16,23 +17,31 @@ api = Api(app)
 documents =  {}
 
 
+@app.route('/app/<path:path>')
+def send_files(path):
+    return send_from_directory(config.APP_PATH, path)
+
+
+
 class Document(Resource):
 
 
 	def post(self, document_id):
 		#print(request.files['file'])
+		print("POST")
 
 		parser = reqparse.RequestParser()
 		parser.add_argument('name', type=str)
 		parser.add_argument('fileupload', type=werkzeug.datastructures.FileStorage, location='files')
 
 		args = parser.parse_args()
-		print(args)
+		#print(args)
 		self.local_path = config.LOCAL_PATH.format(document_id)
 
 		args['fileupload'].save(self.local_path)
 
 		documents[document_id] = self
+		self.document_id = document_id
 
 		r  = requests.post(config.GINI_URL,
 						   files={'file': (document_id, open(self.local_path), 'application/octect-stream')},
@@ -42,7 +51,7 @@ class Document(Resource):
 
 		self.name = document_id
 		self.gini_loc = r.headers['location']
-		self.document_id =  self.gini_loc.split('/')[-1]
+		self.gini_id =  self.gini_loc.split('/')[-1]
 
 
 		# GET and store extractions and layout
@@ -61,10 +70,12 @@ class Document(Resource):
 
 		self.data = self.process_extractions(self.extractions)
 
-		response =  {'document_id': self.document_id,
+		response =  {'gini_id': self.gini_id,
+					 'document_id': self.document_id,
 					 'gini_loc': self.gini_loc,
-					 'original_file': 'http://api.robo.tax:8080/{}'.format(self.name)
+					 'original_file': 'http://api.robo.tax:8080/docs/{}'.format(self.name)
 		}
+
 
 		response.update(self.data)
 
@@ -108,12 +119,36 @@ class Document(Resource):
 		return values[2]
 
 	def get(self, document_id):
-		f = config.LOCAL_PATH.format(document_id)
-		response = send_file(f, mimetype='application/octet-stream')
-		return response
+		print('GET HEADERS')
+		print(request.headers)
+		print(document_id)
 
+		d =  documents.get(document_id, None)
+		if d is not None:
+			return d.data
+		else:
+			return None
 
-api.add_resource(Document, '/<path:document_id>')
+	# def get_file(self, document_id):
+	# 	f = config.LOCAL_PATH.format(document_id)
+	# 	response = send_file(f, mimetype='application/octet-stream')
+	# 	return response
+
+@api.representation('application/json')
+def output_json(data, code, headers=None):
+	print("JSON Requested")
+	resp = make_response(json.dumps(data), code)
+	resp.headers.extend(headers or {})
+	return resp
+
+@api.representation('application/octect-stream')
+def get_file(data, code, headers=None):
+	print("Image requested")
+	f = config.LOCAL_PATH.format(data['document_id'])
+	response = send_file(f, mimetype='application/octet-stream')
+	return response
+
+api.add_resource(Document, '/docs/<path:document_id>')
 
 
 if __name__ == '__main__':
