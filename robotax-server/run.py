@@ -1,29 +1,34 @@
 #!flask/bin/python
 
-from flask import Flask, request
+from flask import Flask, request, make_response, send_file
 from flask_restful import Resource, Api
 from flask_restful import reqparse
 import werkzeug
+import requests
+from requests.auth import HTTPBasicAuth
+import time
 
 app = Flask(__name__)
 api = Api(app)
 
-todos = {}
+
 documents =  {}
 
 GINI_CLIENT_ID='burda-hackday-01'
 GINI_CLIENT_SECRET='q_NoORwCvgZAqgNQiqlAVSV7QCw'
-
-
-class TodoSimple(Resource):
-    def get(self, todo_id):
-        return {todo_id: todos[todo_id]}
-
-    def put(self, todo_id):
-        todos[todo_id] = request.form['files']
-        return {todo_id: todos[todo_id]}
+LOCAL_PATH = "/Users/miguel/TMPDOCS/{}"
 
 class Document(Resource):
+
+	GINI_URL = "https://api.gini.net/documents"
+	GINI_USER, GINI_PASSWD = 'burda-hackday-01:q_NoORwCvgZAqgNQiqlAVSV7QCw'.split(':')
+
+	GINI_HEADERS = {'X-User-Identifier': 'mfcabrera', 'Accept': 'application/vnd.gini.v1+json'}
+
+	 #	curl -v -X POST --data-binary '@/Users/miguel/Downloads/test_document/invoce.pd#f' -H 'Accept: application/vnd.gini.v1+json'  'https://api.gini.net/documents' -u #'burda-hackday-01:q_NoORwCvgZAqgNQiqlAVSV7QCw' -H 'X-User-Identifier: mfcabrera'
+
+
+
 	def post(self, document_id):
 		#print(request.files['file'])
 
@@ -33,16 +38,90 @@ class Document(Resource):
 
 		args = parser.parse_args()
 		print(args)
-		args['fileupload'].save("files/{}".format(document_id))
+		self.local_path = LOCAL_PATH.format(document_id)
+		stream = args['fileupload'].stream
+		args['fileupload'].save(self.local_path)
 
-		documents[document_id] = request.form
-		return {document_id: document_id}
+		documents[document_id] = self
+
+		r  = requests.post(self.GINI_URL,
+						   files={'file': (document_id, open(self.local_path), 'application/octect-stream')},
+		 				   auth=HTTPBasicAuth(self.GINI_USER, self.GINI_PASSWD),
+						   headers = self.GINI_HEADERS
+		)
+
+		self.name = document_id
+		self.gini_loc = r.headers['location']
+		self.document_id =  self.gini_loc.split('/')[-1]
 
 
+		# GET and store extractions and layout
+		ext_url = "{}/extractions".format(self.gini_loc)
+		print(ext_url)
 
 
-#api.add_resource(TodoSimple, '/<string:todo_id>')
-_api.add_resource(Document, '/<path:document_id>')
+		time.sleep(3)
+
+		p = requests.get(ext_url,
+						 auth=HTTPBasicAuth(self.GINI_USER, self.GINI_PASSWD),
+						 headers = self.GINI_HEADERS)
+		print(p.status_code)
+		self.extractions = p.json()
+
+
+		self.data = self.process_extractions(self.extractions)
+
+		response =  {'document_id': self.document_id,
+					 'gini_loc': self.gini_loc,
+					 'original_file': 'http://api.robo.tax/{}'.format(self.name)
+		}
+
+		response.update(self.data)
+
+		return response
+
+	def process_extractions(self, extractions):
+		ext = extractions.get("extractions", {})
+		d = {}
+		d['paymentRecipient'] =  ext.get('paymentRecipient', {}).get('value', 'UNK')
+		d['amountToPay'] = ext.get("amountToPay", {}).get('value','UNK')
+
+		d['docType'] = ext.get("docType", {}).get('value','Other')
+
+
+		brut = self.try_to_extract_brutto(extractions)
+
+		ap = d['amountToPay']
+		if ap != 'UNK':
+			ap = float(ap.split(":")[0])
+			d['Mwst'] = ap * 0.18
+		else:
+			d['Mwst'] = 'UNK'
+
+		if brut is not None:
+			# Maybe a better approx:
+			d['Mwst'] = brut * 0.19
+
+		return d
+
+	def try_to_extract_brutto(self, extractions):
+		ext = extractions
+		l = ext.get("candidates",{}).get("amounts", [])
+
+		if len(l) < 3: # toal, brutto and shipping
+			return None
+
+		values = sorted(map(lambda x: float(x["value"].split(":")[0]), l))
+		return values[2]
+
+
+	def get(self, document_id):
+		f = LOCAL_PATH.format(document_id)
+		response = send_file(f, mimetype='application/octet-stream')
+		return response
+
+
+api.add_resource(Document, '/<path:document_id>')
 
 
 if __name__ == '__main__':
