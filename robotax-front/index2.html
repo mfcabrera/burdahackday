@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!-- Hi there, curious. The future belongs to robots and those who program them. -->
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>RoboTax - APP</title>
+		<meta name="description" content="A responsive, magazine-like website layout with a grid item animation effect when opening the content" />
+		<meta name="keywords" content="grid, layout, effect, animated, responsive, magazine, template, web design" />
+		<meta name="author" content="Codrops" />
+		<link rel="shortcut icon" href="../favicon.ico">
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.3.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/style2.css" />
+		<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+
+		<script src="js/modernizr.custom.js"></script>
+
+		<!-- Maybe put this shit somewhere else, in like custom.css -->
+		<style type="text/css">
+		
+			.fileUpload {
+			    position: relative;
+			    overflow: hidden;
+			    margin: 10px;
+			}
+			.fileUpload input.upload {
+			    position: absolute;
+			    top: 0;
+			    right: 0;
+			    margin: 0;
+			    padding: 0;
+			    font-size: 20px;
+			    cursor: pointer;
+			    opacity: 0;
+			    filter: alpha(opacity=0);
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="container">
+			<button id="menu-toggle" class="menu-toggle"><span>Menu</span></button>
+			<div id="theSidebar" class="sidebar">
+				<button class="close-button fa fa-fw fa-close"></button>
+
+				<!-- Cause yeah, it needs to be directly accessible, for iPad it's ready -->
+				<a class="fileUpload fa fa-camera">
+					<span>Add New Receipt</span>
+					<input type="file" class="upload" accept="image/*" capture="camera">
+				</a>
+
+				<h1><span>RoboTax<span> Receipts List</h1>
+				<nav class="codrops-demos">
+					<a href="">This week</a>
+					<a class="current-demo" href="">All</a>
+				</nav>
+				<div class="related">
+					<h3>Categories</h3>
+					<a href="">Job</a>
+					<a href="">Building/Housing</a>
+					<a href="">Financial</a>
+					<a href="">Other</a>
+				</div>
+
+				<!-- Maybe put this whole shit in a modal, Export functionnality and Dashboard are pretty scarce -->
+				<a href="" class="fileUpload fa fa-dashboard">
+					<span href="">View Dashboard</span>
+				</a>
+				<a href="" class="fileUpload fa fa-file-excel-o">
+					<span href="">Export Recap</span>
+				</a>
+
+			</div>
+			<div id="theGrid" class="main">
+				<section class="grid">
+					<header class="top-bar">
+						<h2 class="top-bar__headline">Latest receipts</h2>
+						<div class="filter">
+							<span>Filter by:</span>
+							<span class="dropdown">Newest</span>
+							<span class="dropdown">Oldest</span>
+						</div>
+					</header>
+				  	<!-- Grid items go here, those are displayed on the main page ;) -->
+					<a class="grid__item" href="#">
+						<h2 class="title title--preview">Books at Hugendubel</h2>
+						<div class="loader"></div>
+						<span class="category">Hobby</span>
+						<div class="meta meta--preview">
+							<img class="meta__avatar" src="img/status/ok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 2,75 €</span>
+						</div>
+					</a>
+
+					<a class="grid__item" href="#">
+						<h2 class="title title--preview">Car Insurance (Audi A8)</h2>
+						<div class="loader"></div>
+						<span class="category">Insurance</span>
+						<div class="meta meta--preview">
+							<img class="meta__avatar" src="img/status/nok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
+						</div>
+					</a>
+
+					<a class="grid__item" href="#">
+						<h2 class="title title--preview">Car Insurance (Audi A8)</h2>
+						<div class="loader"></div>
+						<span class="category">Insurance</span>
+						<div class="meta meta--preview">
+							<img class="meta__avatar" src="img/status/nok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
+						</div>
+					</a>
+
+					<!-- A usability thing for Mobile users, maybe put it on top? -->
+					<footer class="page-meta">
+
+						<div class="fileUpload fa fa-camera">
+							<span>Add New Receipt</span>
+							<form id="badass" action="http://46.101.180.138:8080/" method="post">
+								<input id="thepic" type="file" class="upload" accept="image/*" capture="camera" onchange="picChange(event)" value="">
+							</form>
+						</div>
+						
+					</footer>
+
+				</section>
+				<section class="content">
+					<div class="scroll-wrap">
+						<!-- Corresponds to grid item 1 -->
+						<article class="content__item">
+							<span class="category category--full">Hobby</span>
+							<h2 class="title title--full">Books at Hugendubel</h2>
+							<div class="meta meta--full">
+								<img class="meta__avatar" src="img/status/ok.png" />
+								<span class="meta__author">Test</span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 2,75 €</span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
+								<nav class="article-nav">
+									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
+									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
+								</nav>
+							</div>
+							<p>Hello there !</p>
+						</article>
+
+						<!-- Corresponds to grid item 1 -->
+						<article class="content__item">
+							<span class="category category--full">Insurance</span>
+							<h2 class="title title--full">Car Insurance (Audi A8)</h2>
+							<div class="meta meta--full">
+								<img class="meta__avatar" src="img/status/ok.png"/>
+								<span class="meta__author">Test 2</span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Not Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff</span>
+								<nav class="article-nav">
+									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
+									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
+								</nav>
+							</div>
+							<p>Hello again!</p>
+						</article>
+
+						<!-- Corresponds to grid item 1 -->
+						<article class="content__item">
+							<span class="category category--full">Insurance</span>
+							<h2 class="title title--full">Car Insurance (Audi A8)</h2>
+							<div class="meta meta--full">
+								<img class="meta__avatar" src="img/status/ok.png"/>
+								<span class="meta__author">Test 2</span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Not Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff</span>
+								<nav class="article-nav">
+									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
+									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
+								</nav>
+							</div>
+							<p>Hello again!</p>
+						</article>
+						
+					</div>
+					<button class="close-button"><i class="fa fa-close"></i><span>Close</span></button>
+				</section>
+			</div>
+		</div><!-- /container -->
+		<script src="js/classie.js"></script>
+		<script src="js/main.js"></script>
+
+		<!-- Sweet alert, this shit is dope! Confirm the reception from Gini or is it refundable or not -->
+		<script src="js/sweetalert.min.js"></script> 
+		<script type="text/javascript">
+			swal({   title: "Version 0.5",   text: "This is the dev Server",   type: "success",   confirmButtonText: "Cool" });
+		</script>
+		<script type="text/javascript">
+			function picChange(evt){ 
+
+				var fileInput = evt.target.files;
+				if(fileInput.length>0){
+					var windowURL = window.URL || window.webkitURL; 
+					var picURL = windowURL.createObjectURL(fileInput[0]);
+					var photo = new Image();
+					var formData = new FormData();
+					photo.onload = function(){
+					  //draw photo into canvas when ready
+					  formData.append("name", fileInput[0].name);
+					  formData.append("fileupload", fileInput[0]);			  
+					  fileInput[0].name;
+					  var request = new XMLHttpRequest();
+					  request.open("POST", "http://46.101.180.138:8080/" + fileInput[0].name);
+					  request.send(formData);
+
+					  swal({   title: "Good job!",   text: "Your image is being processed. You will get the result soon.",   type: "success", confirmButtonText: "Cool", html:true });
+					  
+					};
+					//load photo into canvas
+					photo.src = picURL;
+					// windowURL.revokeObjectURL(picURL);
+				}
+			}
+
+		</script>
+
+	</body>
+</html>

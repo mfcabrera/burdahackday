@@ -29,12 +29,12 @@ class Document(Resource):
 		args = parser.parse_args()
 		print(args)
 		self.local_path = config.LOCAL_PATH.format(document_id)
-		stream = args['fileupload'].stream
+
 		args['fileupload'].save(self.local_path)
 
 		documents[document_id] = self
 
-		r  = requests.post(self.GINI_URL,
+		r  = requests.post(config.GINI_URL,
 						   files={'file': (document_id, open(self.local_path), 'application/octect-stream')},
 		 				   auth=HTTPBasicAuth(config.GINI_USER, config.GINI_PASSWD),
 						   headers = config.GINI_HEADERS
@@ -69,6 +69,9 @@ class Document(Resource):
 		response.update(self.data)
 
 		return response
+
+	def detect_main_category(self):
+		pass
 
 	def process_extractions(self, extractions):
 		ext = extractions.get("extractions", {})
