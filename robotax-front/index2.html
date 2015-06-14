@@ -312,7 +312,8 @@
 			swal({   title: "Version 0.5",   text: "This is the dev Server",   type: "success",   confirmButtonText: "Cool" });
 		</script>
 		<script type="text/javascript">
-		var showId = 1;
+		  var showId = 1;
+                  var obj = null;
 			function picChange(evt){ 
 
 				var fileInput = evt.target.files;
@@ -329,8 +330,10 @@
 					  var request = new XMLHttpRequest();
 					  var theFile = "http://robo.tax:8080/docs/" + fileInput[0].name;
 					  request.open("POST", theFile);
-					  request.send(formData);
-					  obj = JSON.parse(setTimeout(httpGet(theFile), 2000));
+		request.send(formData);
+
+                
+		                          obj = JSON.parse(httpGet(theFile)) ;
 					  console.log(obj);
 					  add(obj, showId.toString());
 
@@ -369,8 +372,9 @@
 			}
 
 			function add(obj, id){
-				var articleId = id.toString() + "a";
-				
+		    var articleId = id.toString() + "a";
+                                console.log("FUCK MY LIFE");
+				console.log(obj);
 				var link = document.getElementById(id);
 link.getElementsByClassName("category")[0].innerHTML = obj.cat;
 link.getElementsByClassName("title title--preview")[0].innerHTML = obj.paymentRecipient;

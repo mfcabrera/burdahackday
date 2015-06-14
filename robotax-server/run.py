@@ -1,4 +1,5 @@
 #!flask/bin/python
+# -*- coding: utf-8 -*-
 
 from flask import Flask, send_file, make_response, request, send_from_directory
 from flask_restful import Resource, Api
@@ -9,6 +10,10 @@ from requests.auth import HTTPBasicAuth
 import time
 import config
 import json
+import re
+import StringIO
+import csv
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -21,6 +26,65 @@ documents =  {}
 def send_files(path):
     return send_from_directory(config.APP_PATH, path)
 
+
+@app.route('/export')
+def csv_export():
+	si = StringIO.StringIO()
+
+	rows = []
+	for _id, d in documents.iteritems():
+			drow = []
+			drow.append(_id)
+			for k, v in d.data.iteritems():
+				drow.append(v)
+			rows.append(drow)
+
+	cw = csv.writer(si)
+	cw.writerows(rows)
+	output = make_response(si.getvalue())
+	output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+	output.headers["Content-type"] = "text/csv"
+	return output
+
+
+def extract_text_from_lay_json(jdata):
+	text = []
+	pages = jdata.get("pages", [])
+	if not pages:
+		return " "
+
+	textZones = pages[0]["textZones"]
+	for tz in textZones:
+		prs = tz.get("paragraphs", [])
+		for p in prs:
+			ls = p.get("lines", [])
+			for l in ls:
+				for w in l.get("wds", []):
+					text.append(w["text"])
+	return " ".join(text)
+
+
+def find_whole_word(w):
+    return re.compile(r'\b({0})\b'.format(w.encode('utf-8')), flags=re.UNICODE).search
+
+haus_halt = [u"Küche", u"Wohnzimmer", u"Bad", u"Fenster", u"Türe", u"Leitung", u"Heizung", u"Boden", u"Garten", "Pflanze"]
+CAT_DEF = {"Fortbildung-Sprachkurse": [u"spanish", u"deutsch", u"englisch", u"sprachkurs", u"sprachkürse", u"sprachschule"],
+           "Other-Umzug": [u"transport", u"umzugkartons", u"spedition", u"möbel"],
+		   u"Haushaltsnahe Dienstleistungen-Renovierung": haus_halt
+}
+
+
+def guess_cat_subcat(text):
+	text = text.lower()
+	print(text)
+	for k, values in CAT_DEF.iteritems():
+		for w in values:
+			if w.lower() in text:
+				cat, subcat = k.split('-')
+				return {'cat': cat, 'subcat': subcat}
+
+
+	return {'cat': 'UNK', 'subcat': 'UNK'}
 
 
 class Document(Resource):
@@ -49,6 +113,7 @@ class Document(Resource):
 						   headers = config.GINI_HEADERS
 		)
 
+		print("GINI API  CODE {}".format(r.status_code))
 		self.name = document_id
 		self.gini_loc = r.headers['location']
 		self.gini_id =  self.gini_loc.split('/')[-1]
@@ -56,30 +121,45 @@ class Document(Resource):
 
 		# GET and store extractions and layout
 		ext_url = "{}/extractions".format(self.gini_loc)
+		lay_url = "{}/layout".format(self.gini_loc)
 		print(ext_url)
 
-
-		time.sleep(3)
-
+		time.sleep(5)
 		p = requests.get(ext_url,
 						 auth=HTTPBasicAuth(config.GINI_USER, config.GINI_PASSWD),
 						 headers = config.GINI_HEADERS)
-		print(p.status_code)
+		print("GINI API EXTR CODE {}".format(p.status_code))
+
+		# TODO: add exception handing when JSON fail
 		self.extractions = p.json()
 
 
+		p = requests.get(lay_url,
+						 auth=HTTPBasicAuth(config.GINI_USER, config.GINI_PASSWD),
+						 headers = config.GINI_HEADERS)
+		print("GINI API LAY CODE {}".format(p.status_code))
+
+		# TODO: add exception handing when JSON fail
+		self.layout = p.json()
+
 		self.data = self.process_extractions(self.extractions)
+		self.text = extract_text_from_lay_json(self.layout)
+		self.cats = guess_cat_subcat(self.text)
+
 
 		response =  {'gini_id': self.gini_id,
 					 'document_id': self.document_id,
 					 'gini_loc': self.gini_loc,
 					 'original_file': 'http://api.robo.tax:8080/docs/{}'.format(self.name)
+
 		}
 
 
 		response.update(self.data)
-
+		#response['text'] = self.text
+		response.update(self.cats)
 		return response
+
 
 	def detect_main_category(self):
 		pass
@@ -98,7 +178,7 @@ class Document(Resource):
 		ap = d['amountToPay']
 		if ap != 'UNK':
 			ap = float(ap.split(":")[0])
-			d['Mwst'] = ap * 0.18
+			d['Mwst'] = ap * 0.19
 		else:
 			d['Mwst'] = 'UNK'
 
@@ -111,7 +191,7 @@ class Document(Resource):
 	def try_to_extract_brutto(self, extractions):
 		ext = extractions
 		l = ext.get("candidates",{}).get("amounts", [])
-
+		print(l)
 		if len(l) < 3: # toal, brutto and shipping
 			return None
 
@@ -125,7 +205,10 @@ class Document(Resource):
 
 		d =  documents.get(document_id, None)
 		if d is not None:
-			return d.data
+			data = d.data
+			data.update(d.cats)
+			data['original_file'] =  'http://api.robo.tax:8080/docs/{}'.format(document_id)
+			return data
 		else:
 			return None
 

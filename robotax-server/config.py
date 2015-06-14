@@ -10,4 +10,10 @@ GINI_HEADERS = {'X-User-Identifier': 'mfcabrera', 'Accept': 'application/vnd.gin
 
 APP_PATH='/root/burdahackday/robotax-front'
 
-TLC_KEYWORDS={}
+TLC_CATS=[
+	"job",
+	"finance",
+	"house",
+	"profession expenses",
+	"other",
+]
