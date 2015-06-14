@@ -38,7 +38,11 @@
 			}
 		</style>
 		<script type="text/javascript">
+		var totalDeduct = 0;
 
+		function showtotalamount(){
+			swal({   title: "Total deductible amount!",   text: "Your taxable income is reduced by this amount: <h2>" + totalDeduct.toPrecision(3).toString() + " € </h2> Congratulations!!",   imageUrl: "http://t4t5.github.io/sweetalert/example/images/thumbs-up.jpg" , html: true});
+		}
 			function hideElem(id) {
 			    document.getElementById(id).style.visibility = "hidden"; 
 			}
@@ -82,10 +86,10 @@
 				</div>
 
 				<!-- Maybe put this whole shit in a modal, Export functionnality and Dashboard are pretty scarce -->
-				<a href="" class="fileUpload fa fa-dashboard">
+				<a onclick="showtotalamount()" class="fileUpload fa fa-dashboard">
 					<span href="">View Dashboard</span>
 				</a>
-				<a href="" class="fileUpload fa fa-file-excel-o">
+				<a href="http://robo.tax:8080/export" class="fileUpload fa fa-file-excel-o">
 					<span href="">Export Recap</span>
 				</a>
 
@@ -372,6 +376,7 @@
 link.getElementsByClassName("category")[0].innerHTML = obj.cat;
 link.getElementsByClassName("title title--preview")[0].innerHTML = obj.paymentRecipient;
 link.getElementsByClassName("fa fa-calendar-o")[0].innerHTML =  " " + obj.subcat;
+totalDeduct += obj.Mwst;
 link.getElementsByClassName("fa fa-clock-o")[0].innerHTML = " " + obj.Mwst.toPrecision(2).toString() + " €";
 
 				var article = document.getElementById(articleId);
