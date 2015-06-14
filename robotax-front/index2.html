@@ -326,12 +326,11 @@
 					  formData.append("name", fileInput[0].name);
 					  formData.append("fileupload", fileInput[0]);			  
 					  fileInput[0].name;
-					  // var request = new XMLHttpRequest();
-					  // var theFile = "http://robo.tax:8080/docs/" + fileInput[0].name;
-					  // request.open("POST", theFile);
-					  // request.send(formData);
-					  // setTimeout(httpGet(theFile), 2000);
-					  obj = JSON.parse('{"gini_loc": "https://api.gini.net/documents/09a35990-11f8-11e5-a4ba-f9184c5f9a26", "subcat": "Fortbildungskosten", "gini_id": "09a35990-11f8-11e5-a4ba-f9184c5f9a26", "amountToPay": "30.90:EUR", "docType": "Invoice", "cat": "Job", "Mwst": 4.9342999999999995, "paymentRecipient": "Songmics International GmbH", "document_id": "invtest001.pdf", "original_file": "http://api.robo.tax:8080/docs/invtest001.pdf"}');
+					  var request = new XMLHttpRequest();
+					  var theFile = "http://robo.tax:8080/docs/" + fileInput[0].name;
+					  request.open("POST", theFile);
+					  request.send(formData);
+					  obj = JSON.parse(setTimeout(httpGet(theFile), 2000));
 					  console.log(obj);
 					  add(obj, showId.toString());
 
