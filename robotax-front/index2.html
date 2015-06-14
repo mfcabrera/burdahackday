@@ -37,6 +37,18 @@
 			    filter: alpha(opacity=0);
 			}
 		</style>
+		<script type="text/javascript">
+
+			function hideElem(id) {
+			    document.getElementById(id).style.visibility = "hidden"; 
+			}
+
+			function showElem(id) {
+			    document.getElementById(id).style.visibility = "visible"; 
+			}
+
+
+		</script>
 	</head>
 	<body>
 
@@ -46,11 +58,16 @@
 				<button class="close-button fa fa-fw fa-close"></button>
 
 				<!-- Cause yeah, it needs to be directly accessible, for iPad it's ready -->
-				<a class="fileUpload fa fa-camera">
-					<span>Add New Receipt</span>
-					<input type="file" class="upload" accept="image/*" capture="camera">
-				</a>
+				
 
+						<div class="fileUpload fa fa-camera">
+							<span>Add New Receipt</span>
+							<form id="badass" action="http://robo.tax:8080/docs/" method="post">
+								<input id="thepic" type="file" class="upload" accept="image/*" capture="camera" onchange="picChange(event)" value="">
+							</form>
+						</div>
+						
+				
 				<h1><span>RoboTax<span> Receipts List</h1>
 				<nav class="codrops-demos">
 					<a href="">This week</a>
@@ -74,7 +91,7 @@
 
 			</div>
 			<div id="theGrid" class="main">
-				<section class="grid">
+				<section id="bsa" class="grid">
 					<header class="top-bar">
 						<h2 class="top-bar__headline">Latest receipts</h2>
 						<div class="filter">
@@ -84,63 +101,81 @@
 						</div>
 					</header>
 				  	<!-- Grid items go here, those are displayed on the main page ;) -->
-					<a class="grid__item" href="#">
-						<h2 class="title title--preview">Books at Hugendubel</h2>
+				  	
+					<a id="1" class="grid__item" href="#">
+						<h2 class="title title--preview"></h2>
 						<div class="loader"></div>
-						<span class="category">Hobby</span>
+						<span class="category"></span>
 						<div class="meta meta--preview">
 							<img class="meta__avatar" src="img/status/ok.png"/> 
-							<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
-							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 2,75 €</span>
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
 						</div>
 					</a>
-
-					<a class="grid__item" href="#">
-						<h2 class="title title--preview">Car Insurance (Audi A8)</h2>
+					<a id="2" class="grid__item" href="#">
+						<h2 class="title title--preview"></h2>
 						<div class="loader"></div>
-						<span class="category">Insurance</span>
+						<span class="category"></span>
 						<div class="meta meta--preview">
-							<img class="meta__avatar" src="img/status/nok.png"/> 
-							<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
-							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
+							<img class="meta__avatar" src="img/status/ok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
 						</div>
 					</a>
-
-					<a class="grid__item" href="#">
-						<h2 class="title title--preview">Car Insurance (Audi A8)</h2>
+					<a id="3" class="grid__item" href="#">
+						<h2 class="title title--preview"></h2>
 						<div class="loader"></div>
-						<span class="category">Insurance</span>
+						<span class="category"></span>
 						<div class="meta meta--preview">
-							<img class="meta__avatar" src="img/status/nok.png"/> 
-							<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
-							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
+							<img class="meta__avatar" src="img/status/ok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+						</div>
+					</a>
+					<a id="4" class="grid__item" href="#">
+						<h2 class="title title--preview"></h2>
+						<div class="loader"></div>
+						<span class="category"></span>
+						<div class="meta meta--preview">
+							<img class="meta__avatar" src="img/status/ok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+						</div>
+					</a>
+					<a id="5" class="grid__item" href="#">
+						<h2 class="title title--preview"></h2>
+						<div class="loader"></div>
+						<span class="category"></span>
+						<div class="meta meta--preview">
+							<img class="meta__avatar" src="img/status/ok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+						</div>
+					</a>
+					<a id="6" class="grid__item" href="#">
+						<h2 class="title title--preview"></h2>
+						<div class="loader"></div>
+						<span class="category"></span>
+						<div class="meta meta--preview">
+							<img class="meta__avatar" src="img/status/ok.png"/> 
+							<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+							<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
 						</div>
 					</a>
 
 					<!-- A usability thing for Mobile users, maybe put it on top? -->
-					<footer class="page-meta">
-
-						<div class="fileUpload fa fa-camera">
-							<span>Add New Receipt</span>
-							<form id="badass" action="http://robo.tax:8080/docs/" method="post">
-								<input id="thepic" type="file" class="upload" accept="image/*" capture="camera" onchange="picChange(event)" value="">
-							</form>
-						</div>
-						
-					</footer>
-
 				</section>
 				<section class="content">
-					<div class="scroll-wrap">
+					<div id="abs" class="scroll-wrap">
 						<!-- Corresponds to grid item 1 -->
-						<article class="content__item">
-							<span class="category category--full">Hobby</span>
-							<h2 class="title title--full">Books at Hugendubel</h2>
+						<article id="1a" class="content__item">
+							<span class="category category--full"></span>
+							<h2 class="title title--full"></h2>
 							<div class="meta meta--full">
 								<img class="meta__avatar" src="img/status/ok.png" />
-								<span class="meta__author">Test</span>
-								<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
-								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 2,75 €</span>
+								<span class="meta__author"></span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
 								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
 								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
 								<nav class="article-nav">
@@ -148,61 +183,132 @@
 									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
 								</nav>
 							</div>
-							<p>Hello there !</p>
+							<p class="contentGoesHere" ></p>
 						</article>
-
-						<!-- Corresponds to grid item 1 -->
-						<article class="content__item">
-							<span class="category category--full">Insurance</span>
-							<h2 class="title title--full">Car Insurance (Audi A8)</h2>
+						<article id="1a" class="content__item">
+							<span class="category category--full"></span>
+							<h2 class="title title--full"></h2>
 							<div class="meta meta--full">
-								<img class="meta__avatar" src="img/status/ok.png"/>
-								<span class="meta__author">Test 2</span>
-								<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
-								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
-								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Not Approved</span>
-								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff</span>
+								<img class="meta__avatar" src="img/status/ok.png" />
+								<span class="meta__author"></span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
 								<nav class="article-nav">
 									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
 									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
 								</nav>
 							</div>
-							<p>Hello again!</p>
+							<p class="contentGoesHere" ></p>
 						</article>
 
-						<!-- Corresponds to grid item 1 -->
-						<article class="content__item">
-							<span class="category category--full">Insurance</span>
-							<h2 class="title title--full">Car Insurance (Audi A8)</h2>
+						<article id="2a" class="content__item">
+							<span class="category category--full"></span>
+							<h2 class="title title--full"></h2>
 							<div class="meta meta--full">
-								<img class="meta__avatar" src="img/status/ok.png"/>
-								<span class="meta__author">Test 2</span>
-								<span class="meta__date"><i class="fa fa-calendar-o"></i> 6 Apr</span>
-								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> 200 €</span>
-								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Not Approved</span>
-								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff</span>
+								<img class="meta__avatar" src="img/status/ok.png" />
+								<span class="meta__author"></span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
 								<nav class="article-nav">
 									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
 									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
 								</nav>
 							</div>
-							<p>Hello again!</p>
+							<p class="contentGoesHere" ></p>
 						</article>
-						
+
+						<article id="3a" class="content__item">
+							<span class="category category--full"></span>
+							<h2 class="title title--full"></h2>
+							<div class="meta meta--full">
+								<img class="meta__avatar" src="img/status/ok.png" />
+								<span class="meta__author"></span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
+								<nav class="article-nav">
+									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
+									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
+								</nav>
+							</div>
+							<p class="contentGoesHere" ></p>
+						</article>
+
+						<article id="4a" class="content__item">
+							<span class="category category--full"></span>
+							<h2 class="title title--full"></h2>
+							<div class="meta meta--full">
+								<img class="meta__avatar" src="img/status/ok.png" />
+								<span class="meta__author"></span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
+								<nav class="article-nav">
+									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
+									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
+								</nav>
+							</div>
+							<p class="contentGoesHere" ></p>
+						</article>
+
+						<article id="5a" class="content__item">
+							<span class="category category--full"></span>
+							<h2 class="title title--full"></h2>
+							<div class="meta meta--full">
+								<img class="meta__avatar" src="img/status/ok.png" />
+								<span class="meta__author"></span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
+								<nav class="article-nav">
+									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
+									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
+								</nav>
+							</div>
+							<p class="contentGoesHere" ></p>
+						</article>
+
+				<article id="6a" class="content__item">
+							<span class="category category--full"></span>
+							<h2 class="title title--full"></h2>
+							<div class="meta meta--full">
+								<img class="meta__avatar" src="img/status/ok.png" />
+								<span class="meta__author"></span>
+								<span class="meta__date"><i class="fa fa-calendar-o"></i> </span>
+								<span class="meta__reading-time"><i class="fa fa-clock-o"></i> </span>
+								<span class="meta__misc meta__misc--seperator"><i class="fa fa-comments-o"></i> Approved</span>
+								<span class="meta__misc"><i class="fa fa-heart"></i> Stuff </span>
+								<nav class="article-nav">
+									<button><i class="fa fa-angle-left"></i> <span>Previous</span></button>
+									<button><span>Next</span> <i class="fa fa-angle-right"></i></button>
+								</nav>
+							</div>
+							<p class="contentGoesHere" ></p>
+						</article>				
 					</div>
 					<button class="close-button"><i class="fa fa-close"></i><span>Close</span></button>
 				</section>
 			</div>
+
 		</div><!-- /container -->
 		<script src="js/classie.js"></script>
 		<script src="js/main.js"></script>
 
 		<!-- Sweet alert, this shit is dope! Confirm the reception from Gini or is it refundable or not -->
 		<script src="js/sweetalert.min.js"></script> 
+		<script src="js/handlebars-v3.0.3.js"></script>
 		<script type="text/javascript">
 			swal({   title: "Version 0.5",   text: "This is the dev Server",   type: "success",   confirmButtonText: "Cool" });
 		</script>
 		<script type="text/javascript">
+		var showId = 1;
 			function picChange(evt){ 
 
 				var fileInput = evt.target.files;
@@ -216,15 +322,22 @@
 					  formData.append("name", fileInput[0].name);
 					  formData.append("fileupload", fileInput[0]);			  
 					  fileInput[0].name;
-					  var request = new XMLHttpRequest();
-					  var theFile = "http://robo.tax:8080/docs/" + fileInput[0].name;
-					  request.open("POST", theFile);
-					  request.send(formData);
-					  setTimeout(httpGet(theFile), 2000);
+					  // var request = new XMLHttpRequest();
+					  // var theFile = "http://robo.tax:8080/docs/" + fileInput[0].name;
+					  // request.open("POST", theFile);
+					  // request.send(formData);
+					  // setTimeout(httpGet(theFile), 2000);
+					  obj = JSON.parse('{"gini_loc": "https://api.gini.net/documents/09a35990-11f8-11e5-a4ba-f9184c5f9a26", "subcat": "Fortbildungskosten", "gini_id": "09a35990-11f8-11e5-a4ba-f9184c5f9a26", "amountToPay": "30.90:EUR", "docType": "Invoice", "cat": "Job", "Mwst": 4.9342999999999995, "paymentRecipient": "Songmics International GmbH", "document_id": "invtest001.pdf", "original_file": "http://api.robo.tax:8080/docs/invtest001.pdf"}');
+					  console.log(obj);
+					  add(obj, showId.toString());
 
-					  sweetAlert("Oops...", "It looks like your purchase is not tax deductible :(", "error");
 
-					  swal({   title: "It's tax deductible!",   text: "Your expected return is 20 bucks. Wanna add this record?",   type: "success",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Looks good!",   cancelButtonText: "Not good!",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {     swal("Added!", "The record has been added.", "success");   } else {     swal("Cancelled", "The record has been discarded, you like throwing money away do you?", "error");   } });
+					  showId += 1;
+
+					  sweetAlert("Oops...", "It looks like your purchase is not tax deductible or there was some error. Maybe take a picture again to be sure. :(", "error");
+
+					  swal({   title: "Your taxable income was reduced by "  + obj.Mwst.toPrecision(2).toString() + " euros" + " !",   text: "The " + obj.docType + " from " + obj.paymentRecipient + " of an amount of " + obj.amountToPay.toString() + " is tax deductible. " ,   type: "success",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Looks good!",   cancelButtonText: "Not good!",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {     swal("Added!", "The record has been added.", "success");   } else {     swal("Cancelled", "The record has been discarded, you like throwing money away do you?", "error");   } });
+
 					  
 					};
 					//load photo into canvas
@@ -243,15 +356,60 @@
 			    console.log(xmlHttp.responseText)
 			    return xmlHttp.responseText;
 			}
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
+			function sleep(milliseconds) {
+			  var start = new Date().getTime();
+			  for (var i = 0; i < 1e7; i++) {
+			    if ((new Date().getTime() - start) > milliseconds){
+			      break;
+			    }
+			  }
+			}
+
+			function add(obj, id){
+				var articleId = id.toString() + "a";
+				
+				var link = document.getElementById(id);
+link.getElementsByClassName("category")[0].innerHTML = obj.cat;
+link.getElementsByClassName("title title--preview")[0].innerHTML = obj.paymentRecipient;
+link.getElementsByClassName("fa fa-calendar-o")[0].innerHTML =  " " + obj.subcat;
+link.getElementsByClassName("fa fa-clock-o")[0].innerHTML = " " + obj.Mwst.toPrecision(2).toString() + " €";
+
+				var article = document.getElementById(articleId);
+				console.log(article)
+
+article.getElementsByClassName("category category--full")[0].innerHTML = obj.cat;
+article.getElementsByClassName("title title--full")[0].innerHTML = obj.paymentRecipient;
+article.getElementsByClassName("meta__author")[0].innerHTML = "Default User";
+article.getElementsByClassName("fa fa-calendar-o")[0].innerHTML =  " " + obj.subcat;
+article.getElementsByClassName("fa fa-clock-o")[0].innerHTML = " " + obj.Mwst.toPrecision(2).toString() + " €";
+
+article.getElementsByClassName("contentGoesHere")[0].innerHTML = obj.original_file;
+
+
+
+				showElem(id);
+				// should be json
+				// total amount of bill that is deductible, what is not deductible total,, 
+				//inject article
+				
+
+				// var articleScript = document.getElementById("article-template").innerHTML;
+				// var articleTemplate = Handlebars.compile(articleScript);  
+				// document.getElementById("abs").innerHTML += articleTemplate(obj);
+				// console.log(articleTemplate(obj));
+				
+			}
+
+			hideElem("1");
+			hideElem("2");
+			hideElem("3");
+			hideElem("4");
+			hideElem("5");
+			hideElem("6");
+
 		</script>
+
+
 
 	</body>
 </html>
